@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
-import { Upload, FileText, X, Check } from "lucide-react";
+import { Upload, FileText, Check, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Icon from "@/components/ui/Icon";
 
 interface FileUploadProps {
   onFileSelect: (file: File | null) => void;
@@ -69,29 +70,29 @@ const FileUpload = ({ onFileSelect, selectedFile }: FileUploadProps) => {
 
   if (selectedFile) {
     return (
-      <div className="rounded-2xl border-2 border-success bg-success-muted p-6">
+      <div className="rounded-2xl border-2 border-success/50 bg-card p-6 shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-success/10">
-              <FileText className="h-6 w-6 text-success" />
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-success/10 border border-success/20">
+              <Icon icon={FileText} size={20} className="text-success" />
             </div>
             <div>
-              <p className="font-medium">{selectedFile.name}</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-semibold text-foreground">{selectedFile.name}</p>
+              <p className="text-sm text-foreground">
                 {formatFileSize(selectedFile.size)}
               </p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5 text-sm text-success">
-              <Check className="h-4 w-4" />
+            <div className="flex items-center gap-1.5 text-sm text-success font-medium">
+              <Icon icon={Check} size={16} className="text-success" />
               <span>Ready</span>
             </div>
             <button
               onClick={removeFile}
-              className="rounded-lg p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+              className="rounded-lg p-2 text-foreground hover:bg-accent transition-all duration-200"
             >
-              <X className="h-5 w-5" />
+              <Icon icon={X} size={16} className="text-foreground" />
             </button>
           </div>
         </div>
@@ -106,10 +107,10 @@ const FileUpload = ({ onFileSelect, selectedFile }: FileUploadProps) => {
       onDragOver={handleDrag}
       onDrop={handleDrop}
       className={cn(
-        "relative rounded-2xl border-2 border-dashed p-12 text-center transition-all duration-200",
+        "relative rounded-2xl border-2 border-dashed p-12 text-center transition-all duration-300",
         isDragging
-          ? "border-primary bg-primary/5"
-          : "border-border hover:border-primary/50 hover:bg-muted/50"
+          ? "border-primary bg-success/20 shadow-lg"
+          : "border-border bg-card hover:border-primary hover:bg-accent hover:shadow-md"
       )}
     >
       <input
@@ -122,25 +123,22 @@ const FileUpload = ({ onFileSelect, selectedFile }: FileUploadProps) => {
       <div className="flex flex-col items-center">
         <div
           className={cn(
-            "mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors",
-            isDragging ? "bg-primary/10" : "bg-muted"
+            "mb-4 flex h-16 w-16 items-center justify-center rounded-2xl transition-all duration-300 border-2",
+            isDragging
+              ? "bg-success border-primary"
+              : "bg-background border-border hover:bg-accent"
           )}
         >
-          <Upload
-            className={cn(
-              "h-8 w-8 transition-colors",
-              isDragging ? "text-primary" : "text-muted-foreground"
-            )}
-          />
+          <Icon icon={Upload} size={32} className={isDragging ? "text-foreground" : "text-primary"} />
         </div>
 
-        <p className="mb-2 text-lg font-medium">
+        <p className="mb-2 text-lg font-semibold text-foreground">
           {isDragging ? "Drop your CV here" : "Drag and drop your CV"}
         </p>
-        <p className="mb-4 text-muted-foreground">
-          or <span className="text-primary font-medium">browse files</span>
+        <p className="mb-4 text-foreground">
+          or <span className="text-primary font-medium hover:text-accent transition-colors">browse files</span>
         </p>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-foreground">
           Supports PDF and DOCX formats
         </p>
       </div>

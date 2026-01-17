@@ -4,63 +4,50 @@
 
 @layer base {
   :root {
-    /* Core backgrounds */
-    --background: 210 20% 99%;
-    --foreground: 215 25% 15%;
+    /* Core backgrounds - Dark AI theme */
+    --background: 220 30% 2%;
+    --foreground: 210 40% 98%;
 
     /* Cards & surfaces */
-    --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card: 215 25% 10%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    /* Primary - Violet for AI intelligence */
+    --primary: 262 83% 58%;
+    --primary-foreground: 210 40% 98%;
 
-    /* Primary - Teal Blue for trust */
-    --primary: 199 89% 48%;
-    --primary-foreground: 0 0% 100%;
-
-    /* Secondary - Soft neutral */
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 215 25% 25%;
+    /* Secondary - Deep indigo */
+    --secondary: 240 30% 8%;
+    --secondary-foreground: 210 40% 98%;
 
     /* Muted elements */
-    --muted: 210 15% 95%;
-    --muted-foreground: 215 15% 50%;
+    --muted: 215 25% 15%;
+    --muted-foreground: 217 19% 60%;
 
-    /* Accent - Fresh green for success/matches */
-    --accent: 160 84% 39%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent - Electric blue */
+    --accent: 217 91% 60%;
+    --accent-foreground: 210 40% 98%;
 
-    /* Success green */
-    --success: 160 84% 39%;
-    --success-foreground: 0 0% 100%;
-    --success-muted: 160 50% 95%;
+    /* Success cyan */
+    --success: 188 84% 41%;
+    --success-foreground: 210 40% 98%;
+    --success-muted: 188 50% 20%;
 
-    /* Warning */
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-
-    /* Destructive */
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    /* Brand gradient - AI theme */
+    --gradient-brand: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(217 91% 60%) 50%, hsl(240 30% 8%) 100%);
+    --gradient-brand-foreground: 210 40% 98%;
 
     /* Borders & inputs */
-    --border: 214 20% 90%;
-    --input: 214 20% 90%;
-    --ring: 199 89% 48%;
+    --border: 215 25% 25%;
+    --input: 215 25% 15%;
+    --ring: 262 83% 58%;
 
     --radius: 0.75rem;
 
     /* Match score colors */
-    --match-high: 160 84% 39%;
-    --match-medium: 38 92% 50%;
-    --match-low: 215 15% 50%;
-
-    /* Shadows */
-    --shadow-sm: 0 1px 2px 0 hsl(215 25% 15% / 0.05);
-    --shadow-md: 0 4px 6px -1px hsl(215 25% 15% / 0.07), 0 2px 4px -2px hsl(215 25% 15% / 0.05);
-    --shadow-lg: 0 10px 15px -3px hsl(215 25% 15% / 0.08), 0 4px 6px -4px hsl(215 25% 15% / 0.05);
-    --shadow-xl: 0 20px 25px -5px hsl(215 25% 15% / 0.1), 0 8px 10px -6px hsl(215 25% 15% / 0.05);
+    --match-high: 188 84% 41%;
+    --match-medium: 217 91% 60%;
+    --match-low: 38 92% 50%;
 
     /* Sidebar (keeping defaults) */
     --sidebar-background: 0 0% 98%;
@@ -98,7 +85,7 @@
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 33% 17%;
+    --border: 217 33% 25%;
     --input: 217 33% 17%;
     --ring: 212 27% 84%;
 
@@ -114,6 +101,45 @@
 }
 
 @layer base {
+  * {
+    scrollbar-gutter: stable;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  body {
+    scrollbar-width: auto;
+  }
+
+  * {
+    scrollbar-gutter: stable;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  body {
+    scrollbar-width: auto;
+  }
+
+  * {
+    scrollbar-gutter: stable;
+  }
+
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  body {
+    scrollbar-width: auto;
+  }
+
   * {
     @apply border-border;
   }
@@ -138,7 +164,17 @@
   }
 
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5;
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  .gradient-border {
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(to right, hsl(var(--primary)), hsl(var(--accent))) border-box;
+    border: 2px solid transparent;
+  }
+
+  .animate-ping-slow {
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 }
 
@@ -181,6 +217,102 @@
   }
 }
 
+/* Animated noise/grain overlay for depth */
+@keyframes noise-animation {
+  0%, 100% {
+    transform: translate(0, 0);
+    opacity: 0.03;
+  }
+  25% {
+    transform: translate(-1px, 1px);
+    opacity: 0.04;
+  }
+  50% {
+    transform: translate(1px, -1px);
+    opacity: 0.03;
+  }
+  75% {
+    transform: translate(-1px, -1px);
+    opacity: 0.04;
+  }
+}
+
+.animated-noise {
+  animation: noise-animation 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Enhanced gradient drift animation */
+@keyframes gradient-drift {
+  0%, 100% {
+    background-position: 0% 50%;
+    transform: translateX(0) translateY(0);
+  }
+  33% {
+    background-position: 100% 50%;
+    transform: translateX(-2px) translateY(1px);
+  }
+  66% {
+    background-position: 50% 100%;
+    transform: translateX(2px) translateY(-1px);
+  }
+}
+
+.animated-gradient-drift {
+  animation: gradient-drift 25s ease-in-out infinite;
+}
+
+/* Radial light movement */
+@keyframes radial-light-move {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.15;
+  }
+  33% {
+    transform: translate(-20px, 10px) scale(1.05);
+    opacity: 0.2;
+  }
+  66% {
+    transform: translate(15px, -15px) scale(0.95);
+    opacity: 0.18;
+  }
+}
+
+.animated-radial-light {
+  animation: radial-light-move 18s ease-in-out infinite;
+}
+
+/* Hero background motion animation */
+@keyframes hero-bg-motion {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(-10px, -10px) scale(1.1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(10px, -5px) scale(0.95);
+    opacity: 0.3;
+  }
+  75% {
+    transform: translate(-5px, 10px) scale(1.05);
+    opacity: 0.4;
+  }
+}
+
+@keyframes hero-glow-pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(1.1);
+  }
+}
+
 .animate-fade-up {
   animation: fade-up 0.5s ease-out forwards;
 }
@@ -197,6 +329,14 @@
   animation: bounce-gentle 2s ease-in-out infinite;
 }
 
+.animate-hero-bg-motion {
+  animation: hero-bg-motion 20s ease-in-out infinite;
+}
+
+.animate-hero-glow-pulse {
+  animation: hero-glow-pulse 15s ease-in-out infinite;
+}
+
 .animation-delay-100 {
   animation-delay: 100ms;
 }
@@ -208,3 +348,59 @@
 .animation-delay-300 {
   animation-delay: 300ms;
 }
+
+.animation-delay-400 {
+  animation-delay: 400ms;
+}
+
+.animation-delay-500 {
+  animation-delay: 500ms;
+}
+
+/* Star pulse animation for Expertise Matching */
+@keyframes star-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.animate-star-pulse {
+  animation: star-pulse 2s ease-in-out infinite;
+}
+
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animation-delay-450 {
+  animation-delay: 450ms;
+}
+/* --- FIX LỖI ICON BIẾN MẤT KHI ZOOM --- */
+
+/* 1. Ép tất cả SVG không bao giờ được co lại (flex-shrink) */
+svg {
+  flex-shrink: 0 !important;
+}
+
+/* 2. Hardcode kích thước tối thiểu cho các size icon phổ biến của Lucide 
+   (Trình duyệt sẽ không thể bóp nó nhỏ hơn số px này dù zoom out cỡ nào) */
+svg[width="16"][height="16"] {
+  min-width: 16px !important;
+  min-height: 16px !important;
+}
+
+svg[width="24"][height="24"] {
+  min-width: 24px !important;
+  min-height: 24px !important;
+}
+
+svg[width="20"][height="20"] {
+  min-width: 20px !important;
+  min-height: 20px !important;
+}
+
