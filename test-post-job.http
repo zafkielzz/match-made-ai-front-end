@@ -1,0 +1,149 @@
+### Test POST Job API
+### Sử dụng file này với REST Client extension trong VS Code
+### hoặc copy payload để test với Postman/Insomnia
+
+POST http://localhost:3000/jobs
+Content-Type: application/json
+
+{
+  "occupation": {
+    "taxonomy": "ESCO_OCCUPATION",
+    "code": "2512.1",
+    "label": "Backend Developer"
+  },
+  "industries": [
+    {
+      "taxonomy": "VSIC_INDUSTRY",
+      "version": "2018",
+      "code": "62.01",
+      "label": "IT - Software"
+    }
+  ],
+  "title": "Senior Backend Developer",
+  "company": "Tech Corp",
+  "companyName": "Tech Corp",
+  "jobLevel": "senior",
+  "employmentType": "fulltime",
+  "jobType": "fulltime",
+  "requiredExperience": "5-7",
+  "educationLevel": "bachelor",
+  "languageRequirement": "English - fluent",
+  "workMode": "hybrid",
+  "location": "Ho Chi Minh City, Vietnam",
+  "locationDetails": {
+    "city": "Ho Chi Minh City",
+    "country": "Vietnam",
+    "code": "VN-SG"
+  },
+  "salary": {
+    "min": "2000",
+    "max": "3500",
+    "currency": "USD",
+    "isNegotiable": true,
+    "isGross": true
+  },
+  "jobOverview": "Join our backend team to build scalable microservices. You'll design APIs and optimize database performance, directly impacting 1M+ users.",
+  "description": "Join our backend team to build scalable microservices. You'll design APIs and optimize database performance, directly impacting 1M+ users.",
+  "responsibilities": [
+    "Design and implement RESTful APIs for mobile applications",
+    "Optimize database queries and improve system performance",
+    "Collaborate with frontend team to integrate APIs",
+    "Write clean, maintainable, and well-documented code",
+    "Participate in code reviews and mentor junior developers"
+  ],
+  "requirements": {
+    "required": [
+      "5+ years of Python development experience",
+      "Strong experience with Django or FastAPI framework",
+      "Solid understanding of SQL and database optimization",
+      "Experience with RESTful API design and implementation",
+      "Good understanding of software design patterns"
+    ],
+    "preferred": [
+      "Experience with GraphQL",
+      "Knowledge of microservices architecture",
+      "Familiarity with Docker and Kubernetes",
+      "Experience with AWS or GCP cloud platforms"
+    ]
+  },
+  "technologyStack": {
+    "programmingLanguages": ["Python", "JavaScript"],
+    "frameworks": ["Django", "FastAPI", "React"],
+    "databases": ["PostgreSQL", "Redis", "MongoDB"],
+    "toolsPlatforms": ["Docker", "AWS", "Kubernetes", "GitLab CI"]
+  },
+  "benefits": {
+    "predefined": [
+      {
+        "id": "health-insurance",
+        "label": "Health Insurance",
+        "icon": "Heart"
+      },
+      {
+        "id": "13th-month",
+        "label": "13th Month Salary",
+        "icon": "DollarSign"
+      },
+      {
+        "id": "performance-bonus",
+        "label": "Performance Bonus",
+        "icon": "TrendingUp"
+      },
+      {
+        "id": "laptop",
+        "label": "Laptop Provided",
+        "icon": "Laptop"
+      },
+      {
+        "id": "team-building",
+        "label": "Team Building",
+        "icon": "Users"
+      }
+    ],
+    "custom": [
+      "Free gym membership",
+      "Remote work allowance $200/month",
+      "Annual company trip"
+    ]
+  },
+  "workingTime": "Monday-Friday, 9AM-6PM",
+  "applicationDeadline": "2025-03-31",
+  "numberOfHires": 2,
+  "applyMethod": "platform",
+  "applyEmail": "",
+  "applyLink": "",
+  "status": "published",
+  "jobStatus": "published",
+  "metadata": {
+    "createdAt": "2025-01-23T10:30:00.000Z",
+    "updatedAt": "2025-01-23T10:30:00.000Z"
+  }
+}
+
+###
+
+### Test GET Jobs (verify job was created)
+GET http://localhost:3000/jobs
+
+###
+
+### Test GET Single Job
+GET http://localhost:3000/jobs/1
+
+###
+
+### Test PATCH Job (update)
+PATCH http://localhost:3000/jobs/1
+Content-Type: application/json
+
+{
+  "title": "Senior Backend Developer (Updated)",
+  "status": "closed"
+}
+
+###
+
+### Test DELETE Job
+DELETE http://localhost:3000/jobs/1
+
+###
