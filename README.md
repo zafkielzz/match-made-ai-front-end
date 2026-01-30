@@ -102,7 +102,17 @@ Planned integration:
 - **match-made-ai-backend** – Backend API and business logic
 
 ---
+## Running Locally
 
+>  Work in progress. Some features use mock data.
+
+```bash
+git clone https://github.com/<org>/match-made-ai-front-end.git
+cd match-made-ai-front-end
+npm install
+npm run dev
+```
+---
 ##  Notes
 
 This repository focuses on **frontend UX and system interaction**, not on AI model development.  
