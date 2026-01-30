@@ -107,7 +107,7 @@ Planned integration:
 >  Work in progress. Some features use mock data.
 
 ```bash
-git clone https://github.com/<org>/match-made-ai-front-end.git
+git clone https://github.com/zafkielzz/match-made-ai-front-end.git
 cd match-made-ai-front-end
 npm install
 npm run dev
