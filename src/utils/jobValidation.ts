@@ -404,3 +404,174 @@ export const validateJobForm = (formData: any): JobFormValidationResult => {
     warnings
   };
 };
+
+// ========================
+// ADDITIONAL VALIDATORS
+// ========================
+
+import type { SalaryRange, ApplicationMethod, WorkingTime, JobStatus } from "../types/job";
+
+/**
+ * Validate ISO date format (YYYY-MM-DD)
+ */
+export function validateISODate(dateString: string): { valid: boolean; error?: string } {
+  if (!dateString) {
+    return { valid: false, error: "Date is required" };
+  }
+
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!isoDateRegex.test(dateString)) {
+    return { valid: false, error: "Date must be in YYYY-MM-DD format" };
+  }
+
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return { valid: false, error: "Invalid date" };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Validate application deadline
+ */
+export function validateDeadline(
+  deadline: string,
+  status: JobStatus
+): { valid: boolean; error?: string } {
+  const dateValidation = validateISODate(deadline);
+  if (!dateValidation.valid) {
+    return dateValidation;
+  }
+
+  if (status === "PUBLISHED") {
+    const deadlineDate = new Date(deadline);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (deadlineDate < today) {
+      return { valid: false, error: "Deadline must be in the future for published jobs" };
+    }
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Validate application method (typed version)
+ */
+export function validateApplicationMethodTyped(
+  apply: Partial<ApplicationMethod>
+): { valid: boolean; error?: string } {
+  if (!apply.method) {
+    return { valid: false, error: "Application method is required" };
+  }
+
+  if (apply.method === "EMAIL") {
+    if (!apply.email) {
+      return { valid: false, error: "Email is required for email application method" };
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(apply.email)) {
+      return { valid: false, error: "Invalid email format" };
+    }
+  }
+
+  if (apply.method === "LINK") {
+    if (!apply.link) {
+      return { valid: false, error: "Link is required for link application method" };
+    }
+    try {
+      new URL(apply.link);
+      if (!apply.link.startsWith("http://") && !apply.link.startsWith("https://")) {
+        return { valid: false, error: "Link must start with http:// or https://" };
+      }
+    } catch {
+      return { valid: false, error: "Invalid URL format" };
+    }
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Validate working time
+ */
+export function validateWorkingTime(
+  workingTime: Partial<WorkingTime>
+): { valid: boolean; error?: string } {
+  if (!workingTime.days || workingTime.days.length === 0) {
+    return { valid: false, error: "At least one working day is required" };
+  }
+
+  const validDays = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+  const invalidDays = workingTime.days.filter((day) => !validDays.includes(day));
+  if (invalidDays.length > 0) {
+    return { valid: false, error: `Invalid day codes: ${invalidDays.join(", ")}` };
+  }
+
+  const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+  if (workingTime.start && !timeRegex.test(workingTime.start)) {
+    return { valid: false, error: "Start time must be in HH:MM format (24-hour)" };
+  }
+
+  if (workingTime.end && !timeRegex.test(workingTime.end)) {
+    return { valid: false, error: "End time must be in HH:MM format (24-hour)" };
+  }
+
+  if (workingTime.start && workingTime.end) {
+    const [startHour, startMin] = workingTime.start.split(":").map(Number);
+    const [endHour, endMin] = workingTime.end.split(":").map(Number);
+    const startMinutes = startHour * 60 + startMin;
+    const endMinutes = endHour * 60 + endMin;
+
+    if (startMinutes >= endMinutes) {
+      return { valid: false, error: "Start time must be before end time" };
+    }
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Validate experience years
+ */
+export function validateExperience(years: number): { valid: boolean; error?: string } {
+  if (years < 0) {
+    return { valid: false, error: "Experience cannot be negative" };
+  }
+
+  if (years > 30) {
+    return { valid: false, error: "Experience cannot exceed 30 years" };
+  }
+
+  return { valid: true };
+}
+
+/**
+ * Validate salary range (typed version)
+ */
+export function validateSalaryTyped(salary: Partial<SalaryRange>): { valid: boolean; error?: string } {
+  if (!salary.min && !salary.max) {
+    return { valid: true };
+  }
+
+  if (salary.min !== undefined && salary.min < 0) {
+    return { valid: false, error: "Minimum salary cannot be negative" };
+  }
+
+  if (salary.max !== undefined && salary.max < 0) {
+    return { valid: false, error: "Maximum salary cannot be negative" };
+  }
+
+  if (salary.min !== undefined && salary.max !== undefined && salary.min > salary.max) {
+    return { valid: false, error: "Minimum salary cannot be greater than maximum" };
+  }
+
+  const validCurrencies = ["USD", "VND", "EUR", "GBP", "SGD", "THB", "JPY", "CNY"];
+  if (salary.currency && !validCurrencies.includes(salary.currency)) {
+    return { valid: false, error: "Invalid currency code" };
+  }
+
+  return { valid: true };
+}

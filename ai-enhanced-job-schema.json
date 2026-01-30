@@ -1,0 +1,553 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI Enhanced Job Schema",
+  "description": "Enhanced job schema for AI CV-to-Job matching with embedding, reranking, and explainability support",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "companyName",
+    "jobLevel",
+    "employmentType",
+    "educationLevel",
+    "workMode",
+    "minYearsExperience",
+    "languageRequirements",
+    "locationDetails",
+    "jobOverview",
+    "responsibilities",
+    "requirements",
+    "technologyStack",
+    "benefits",
+    "applicationDeadline",
+    "numberOfHires",
+    "apply",
+    "status",
+    "metadata"
+  ],
+  "properties": {
+    "id": {
+      "type": ["string", "number"],
+      "description": "Unique job identifier"
+    },
+    "title": {
+      "type": "string",
+      "description": "Job title",
+      "minLength": 1
+    },
+    "companyName": {
+      "type": "string",
+      "description": "Company name",
+      "minLength": 1
+    },
+    "jobLevel": {
+      "type": "string",
+      "enum": ["INTERN", "JUNIOR", "MID", "SENIOR", "LEAD", "MANAGER"],
+      "description": "Job seniority level"
+    },
+    "employmentType": {
+      "type": "string",
+      "enum": ["FULL_TIME", "PART_TIME", "CONTRACT", "TEMP", "FREELANCE"],
+      "description": "Employment type"
+    },
+    "educationLevel": {
+      "type": "string",
+      "enum": ["HIGH_SCHOOL", "ASSOCIATE", "BACHELOR", "MASTER", "PHD", "NONE"],
+      "description": "Required education level"
+    },
+    "workMode": {
+      "type": "string",
+      "enum": ["ONSITE", "REMOTE", "HYBRID"],
+      "description": "Work arrangement"
+    },
+    "minYearsExperience": {
+      "type": "number",
+      "description": "Minimum years of experience (legacy field, kept for backward compatibility)",
+      "minimum": 0
+    },
+    "experience": {
+      "type": "object",
+      "description": "(C) Enhanced experience representation with range and seniority signals",
+      "properties": {
+        "min": {
+          "type": ["number", "null"],
+          "description": "Minimum years of experience",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "max": {
+          "type": ["number", "null"],
+          "description": "Maximum years of experience",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "raw": {
+          "type": ["string", "null"],
+          "description": "Original experience text (e.g., '2-5 years', 'freshers welcome')"
+        },
+        "senioritySignals": {
+          "type": "array",
+          "description": "Extracted seniority keywords (e.g., ['senior', 'lead', '5+ years'])",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        }
+      },
+      "default": {
+        "min": null,
+        "max": null,
+        "raw": null,
+        "senioritySignals": []
+      }
+    },
+    "languageRequirements": {
+      "type": "array",
+      "description": "(D) Enhanced language requirements with required flag",
+      "items": {
+        "type": "object",
+        "required": ["languageCode", "language", "proficiency", "required"],
+        "properties": {
+          "languageCode": {
+            "type": "string",
+            "description": "ISO 639-1 language code (e.g., 'en', 'vi')",
+            "pattern": "^[a-z]{2}$"
+          },
+          "language": {
+            "type": "string",
+            "description": "Language display name (e.g., 'English', 'Vietnamese')"
+          },
+          "proficiency": {
+            "type": "string",
+            "enum": ["BASIC", "INTERMEDIATE", "FLUENT", "NATIVE"],
+            "description": "Required proficiency level"
+          },
+          "required": {
+            "type": "boolean",
+            "description": "Whether this language is required (vs. nice-to-have)",
+            "default": false
+          },
+          "certificate": {
+            "type": "object",
+            "description": "Optional language certificate requirement",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Certificate type (e.g., 'IELTS', 'TOEFL', 'JLPT')"
+              },
+              "scoreOrLevel": {
+                "type": "string",
+                "description": "Required score or level (e.g., '7.0', 'N2')"
+              },
+              "customName": {
+                "type": "string",
+                "description": "Custom certificate name for 'Other' type"
+              }
+            }
+          }
+        }
+      }
+    },
+    "locationDetails": {
+      "type": "object",
+      "required": ["city", "country"],
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "country": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "description": "Location code (optional)"
+        }
+      }
+    },
+    "jobOverview": {
+      "type": "string",
+      "description": "Job description overview",
+      "minLength": 1
+    },
+    "responsibilities": {
+      "type": "array",
+      "description": "List of job responsibilities",
+      "items": {
+        "type": "string"
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "required": ["required", "preferred"],
+      "properties": {
+        "required": {
+          "type": "array",
+          "description": "Required qualifications",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preferred": {
+          "type": "array",
+          "description": "Preferred qualifications",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "technologyStack": {
+      "type": "object",
+      "description": "Technology stack (legacy field, kept for backward compatibility)",
+      "required": ["programmingLanguages", "frameworks", "databases", "toolsPlatforms"],
+      "properties": {
+        "programmingLanguages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TechnologyItem"
+          }
+        },
+        "frameworks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TechnologyItem"
+          }
+        },
+        "databases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TechnologyItem"
+          }
+        },
+        "toolsPlatforms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TechnologyItem"
+          }
+        }
+      }
+    },
+    "extractedSkills": {
+      "type": "object",
+      "description": "(A) Extracted skills for AI matching - normalized and independent of technologyStack",
+      "properties": {
+        "core": {
+          "type": "array",
+          "description": "Core technical skills (e.g., ['Python', 'React', 'PostgreSQL'])",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "tools": {
+          "type": "array",
+          "description": "Tools and platforms (e.g., ['Docker', 'Kubernetes', 'AWS'])",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "domain": {
+          "type": "array",
+          "description": "Domain expertise (e.g., ['Backend Development', 'Machine Learning'])",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "soft": {
+          "type": "array",
+          "description": "Soft skills (e.g., ['Leadership', 'Communication'])",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "synonyms": {
+          "type": "object",
+          "description": "Skill synonym mapping (e.g., {'k8s': 'Kubernetes', 'JS': 'JavaScript'})",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "source": {
+          "type": "string",
+          "enum": ["manual", "rule", "llm"],
+          "description": "Extraction method for debugging"
+        }
+      },
+      "default": {
+        "core": [],
+        "tools": [],
+        "domain": [],
+        "soft": []
+      }
+    },
+    "scoringWeights": {
+      "type": "object",
+      "description": "(B) Scoring weights for matching algorithm components",
+      "properties": {
+        "required": {
+          "type": "number",
+          "description": "Weight for required qualifications",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1.0
+        },
+        "preferred": {
+          "type": "number",
+          "description": "Weight for preferred qualifications",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.4
+        },
+        "techStack": {
+          "type": "number",
+          "description": "Weight for technology stack match",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.8
+        },
+        "extractedCore": {
+          "type": "number",
+          "description": "Weight for extracted core skills",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1.0
+        },
+        "extractedTools": {
+          "type": "number",
+          "description": "Weight for extracted tools",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.8
+        }
+      },
+      "default": {
+        "required": 1.0,
+        "preferred": 0.4,
+        "techStack": 0.8,
+        "extractedCore": 1.0,
+        "extractedTools": 0.8
+      }
+    },
+    "extractionMetadata": {
+      "type": ["object", "null"],
+      "description": "(E) Metadata for skill extraction pipeline tracking",
+      "properties": {
+        "extractedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO timestamp when extraction was performed"
+        },
+        "extractorVersion": {
+          "type": "string",
+          "description": "Version of extraction pipeline (e.g., 'gpt-4-2024-01', 'rule-v1.0')"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Confidence score (0.0-1.0)",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "errors": {
+          "type": "array",
+          "description": "Extraction errors or warnings",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "default": null
+    },
+    "jobTextForMatching": {
+      "type": ["string", "null"],
+      "description": "(F) Precomputed concatenated text for embedding generation and reranking",
+      "default": null
+    },
+    "benefits": {
+      "type": "object",
+      "required": ["predefined", "custom"],
+      "properties": {
+        "predefined": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "icon": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "custom": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "salary": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "type": "string"
+        },
+        "negotiable": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["GROSS", "NET"]
+        }
+      }
+    },
+    "workingTime": {
+      "type": "object",
+      "properties": {
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+          }
+        },
+        "start": {
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):([0-5]\\d)$"
+        },
+        "end": {
+          "type": "string",
+          "pattern": "^([01]\\d|2[0-3]):([0-5]\\d)$"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "applicationDeadline": {
+      "type": "string",
+      "format": "date",
+      "description": "Application deadline (YYYY-MM-DD)"
+    },
+    "numberOfHires": {
+      "type": "number",
+      "minimum": 1,
+      "default": 1
+    },
+    "apply": {
+      "type": "object",
+      "required": ["method"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["LINK", "EMAIL", "PLATFORM"]
+        },
+        "email": {
+          "type": "string",
+          "format": "email"
+        },
+        "link": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "occupation": {
+      "type": "object",
+      "properties": {
+        "taxonomy": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "industries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "taxonomy": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": ["DRAFT", "PUBLISHED"]
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["createdAt", "updatedAt"],
+      "properties": {
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "TechnologyItem": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "proficiency": {
+          "type": "string",
+          "enum": ["BASIC", "INTERMEDIATE", "ADVANCED"]
+        },
+        "certificate": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "level": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
