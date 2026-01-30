@@ -39,7 +39,7 @@ The frontend provides:
 
 ---
 
-## 🧑‍💼 HR (Recruiter)
+##  HR (Recruiter)
 
 **Current features**
 - Post job openings using a structured job format
@@ -80,7 +80,7 @@ Planned integration:
 ---
 
 
-## 🚧 Current Status & Roadmap
+##  Current Status & Roadmap
 
 **Completed / In Progress**
 - Candidate job browsing flow
